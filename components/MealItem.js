@@ -1,19 +1,28 @@
 import { Image, Pressable, Text, View, StyleSheet, Platform } from "react-native"
+import MealDetails from "./MealsDetails"
 
 
-function MealItem({ title, imageUrl, Duration, Complexity, Affordability }) {
+function MealItem({ id, title, imageUrl, Duration, Complexity, Affordability, navigation }) {
+
+    const NavigateMeal = () => {
+        return navigation.navigate('Meal', {
+            id: id
+        })
+    }
+
+
     return <View style={styles.mealItem}>
-        <Pressable style={({ pressed }) => [pressed ? styles.pressed : null]}>
+        <Pressable style={({ pressed }) => [pressed ? styles.pressed : null]} onPress={NavigateMeal}>
             <View>
 
                 <Image style={styles.image} source={{ uri: imageUrl }} />
                 <Text style={styles.title}>{title}</Text>
             </View>
-            <View style={styles.details}>
-                <Text style={styles.description}>{Duration} Min</Text>
-                <Text style={styles.description}>{Complexity.toUpperCase()}</Text>
-                <Text style={styles.description}>{Affordability.toUpperCase()}</Text>
-            </View>
+            <MealDetails
+
+                Duration={Duration}
+                Complexity={Complexity}
+                Affordability={Affordability} />
         </Pressable>
     </View>
 }
