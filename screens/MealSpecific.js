@@ -1,16 +1,40 @@
 import { useNavigation } from "@react-navigation/native";
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealsDetails";
 import SubTitle from "../components/MealDetails/SubTitle";
 import List from "../components/MealDetails/List";
+import IconButton from "../components/LikeIcon";
+import { FavoriteContext } from "../store/context/favorite-context";
 
 function MealSpecific({ route }) {
     const navigation = useNavigation();
-
-
+    const { ids, removeFavorite, addFavorite } = useContext(FavoriteContext)
     const catId = route.params.id;
+
+    const mealIsFavorite = ids.includes(catId)
+
+    function ChangeFavHandler() {
+        if (mealIsFavorite) {
+            removeFavorite(catId)
+        }
+        else {
+            addFavorite(catId)
+        }
+
+    }
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => {
+                return <IconButton icon={mealIsFavorite ? "heart" : "heart-outline"} color="white" onPress={ChangeFavHandler}></IconButton>
+            }
+        })
+    }, [ChangeFavHandler, navigation])
+
+
+
     const selectedMeal = MEALS.find((meal) => meal.id == catId)
     useLayoutEffect(() => {
         navigation.setOptions({
